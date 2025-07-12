@@ -57,8 +57,19 @@ public class Mapper {
                 budget.getId(),
                 budget.getCategory(),
                 budget.getMonth(),
+                budget.getYear(),
                 budget.getBudgetAmount()
         );
+    }
+    public Budget toBudget(BudgetDTO budgetDTO,User user)
+    {
+        Budget dto = new Budget();
+        dto.setBudgetAmount(budgetDTO.getBudgetAmount());
+        dto.setCategory(budgetDTO.getCategory());
+        dto.setUser(user);
+        dto.setMonth(budgetDTO.getMonth());
+        dto.setYear(budgetDTO.getYear());
+        return dto;
     }
 
 

@@ -5,25 +5,28 @@ import java.math.BigDecimal;
 public class BudgetDTO {
     private Integer id;
     private String category;
-    private Integer month; // Typically YYYYMM or just MM if filtered by year
+    private String month;  // e.g., "July"
+    private String year;   // e.g., "2025"
     private BigDecimal budgetAmount;
 
-    // Optional: You can include userId if you want to show/edit ownership in frontend
+    // Optional: frontend display / user-specific logic
     private Integer userId;
 
     public BudgetDTO() {}
 
-    public BudgetDTO(Integer id, String category, Integer month, BigDecimal budgetAmount) {
+    public BudgetDTO(Integer id, String category, String month, String year, BigDecimal budgetAmount) {
         this.id = id;
         this.category = category;
         this.month = month;
+        this.year = year;
         this.budgetAmount = budgetAmount;
     }
 
-    public BudgetDTO(Integer id, String category, Integer month, BigDecimal budgetAmount, Integer userId) {
+    public BudgetDTO(Integer id, String category, String month, String year, BigDecimal budgetAmount, Integer userId) {
         this.id = id;
         this.category = category;
         this.month = month;
+        this.year = year;
         this.budgetAmount = budgetAmount;
         this.userId = userId;
     }
@@ -46,12 +49,20 @@ public class BudgetDTO {
         this.category = category;
     }
 
-    public Integer getMonth() {
+    public String getMonth() {
         return month;
     }
 
-    public void setMonth(Integer month) {
+    public void setMonth(String month) {
         this.month = month;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
     }
 
     public BigDecimal getBudgetAmount() {

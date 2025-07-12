@@ -5,9 +5,10 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name = "budgets", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"user_id", "category", "month"})
+        @UniqueConstraint(columnNames = {"month", "year"})
 })
 public class Budget {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -19,12 +20,15 @@ public class Budget {
     private String category;
 
     @Column(nullable = false)
-    private Integer month; // Year (e.g., 2025)
+    private String month; // e.g., "July"
+
+    @Column(nullable = false)
+    private String year; // e.g., "2025"
 
     @Column(name = "budget_amount", nullable = false)
     private BigDecimal budgetAmount;
 
-    // Getters & Setters
+    // --- Getters & Setters ---
 
     public Integer getId() {
         return id;
@@ -50,12 +54,20 @@ public class Budget {
         this.category = category;
     }
 
-    public Integer getMonth() {
+    public String getMonth() {
         return month;
     }
 
-    public void setMonth(Integer month) {
+    public void setMonth(String month) {
         this.month = month;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
     }
 
     public BigDecimal getBudgetAmount() {
