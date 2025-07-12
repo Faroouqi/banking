@@ -25,15 +25,12 @@ public class UserController {
 
     private final UserService userService;
     private final Mapper mapper;
-    private final AuthenticationManager authenticationManager;
     private final UserDetailUtil util;
 
     @Autowired
-    public UserController(UserService userService, Mapper mapper,
-                          AuthenticationManager authenticationManager, UserDetailUtil util) {
+    public UserController(UserService userService, Mapper mapper, UserDetailUtil util) {
         this.userService = userService;
         this.mapper = mapper;
-        this.authenticationManager = authenticationManager;
         this.util = util;
     }
 
@@ -49,11 +46,6 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDTO request) {
-        UsernamePasswordAuthenticationToken authToken =
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword());
-
-        Authentication auth = authenticationManager.authenticate(authToken);
-        SecurityContextHolder.getContext().setAuthentication(auth);
 
         return ResponseEntity.ok("Login successful");
     }

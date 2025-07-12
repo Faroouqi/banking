@@ -11,11 +11,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class BudgetServicec {
+public class BudgetService {
     private final BudgetRepository budgetRepository;
     private final Mapper mapper;
     @Autowired
-    public BudgetServicec(BudgetRepository budgetRepository, Mapper mapper) {
+    public BudgetService(BudgetRepository budgetRepository, Mapper mapper) {
         this.budgetRepository = budgetRepository;
         this.mapper = mapper;
     }

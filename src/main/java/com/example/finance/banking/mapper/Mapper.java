@@ -6,8 +6,11 @@ import com.example.finance.banking.dto.UserRequestDTO;
 import com.example.finance.banking.entity.Budget;
 import com.example.finance.banking.entity.Transaction;
 import com.example.finance.banking.entity.User;
+import org.hibernate.annotations.Comment;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 
+@Component
 public class Mapper {
     private final PasswordEncoder passwordEncoder;
 
