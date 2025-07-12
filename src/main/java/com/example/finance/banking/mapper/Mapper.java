@@ -44,7 +44,7 @@ public class Mapper {
     {
         Transaction transaction = new Transaction();
         transaction.setUser(user);
-        transaction.setType(getType(dto.getType()));
+        transaction.setType(Transaction.TransactionType.valueOf(dto.getType().toUpperCase()));
         transaction.setCategory(dto.getCategory());
         transaction.setAmount(dto.getAmount());
         transaction.setDate(dto.getDate());
@@ -61,10 +61,6 @@ public class Mapper {
         );
     }
 
-    private Transaction.TransactionType getType(String type)
-    {
-        return type == "INCOME" ? Transaction.TransactionType.INCOME : Transaction.TransactionType.EXPENSE;
-    }
 
 
 }

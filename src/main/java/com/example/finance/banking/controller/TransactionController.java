@@ -29,18 +29,20 @@ public class TransactionController {
         private final UserDetailUtil util;
 
     @Autowired
-    public TransactionController(TransactionService transactionService, UserService userService, UserDetailUtil util) {
+    public TransactionController(TransactionService transactionService, UserService userService, UserDetailUtil util,Mapper mapper) {
         this.transactionService = transactionService;
         this.userService = userService;
         this.util = util;
+        this.mapper = mapper;
     }
 
     @GetMapping("/transaction")
     public ResponseEntity<?> getAllTransaction()
     {
+        log.info("---Getting all transaction---");
         if(util.getUser()!=null)
         {
-            List<Transaction> transactions = transactionService.getByUserId(util.getUser().getId());
+            List<Transaction> transactions = transactionService.getAll();
             ArrayList<TransactionDTO> transactionList = new ArrayList<>();
             transactions.forEach(transaction -> {
                 transactionList.add(mapper.mappingTransactiontoTransactionDTO(transaction));
@@ -54,17 +56,15 @@ public class TransactionController {
     public ResponseEntity<?> createTransaction(@RequestBody TransactionDTO request) {
         log.info("--Inside CreateTransaction----");
         if (util.getUser() != null) {
-            List<Transaction> transactions = transactionService.getByUserId(util.getUser().getId());
-            ArrayList<TransactionDTO> transactionList = new ArrayList<>();
-            transactions.forEach(transaction -> {
-                transactionList.add(mapper.mappingTransactiontoTransactionDTO(transaction));
-            });
-            return ResponseEntity.ok(transactionList);
+            log.info("user id: {}",util.getUser().getEmail());
+
+            return ResponseEntity.ok(transactionService.createTransaction(request,util.getUser()));
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not Authorized in");
     }
     @GetMapping("/transactions/{id}")
     public ResponseEntity<?> getTransactionById(@PathVariable Integer id) {
+        log.info("--Fetching Transaction info using id: {}",id);
         TransactionDTO transactionDTO = transactionService.getTransactionById(id, util.getUser());
         if (transactionDTO == null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)

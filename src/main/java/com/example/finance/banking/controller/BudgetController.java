@@ -30,6 +30,7 @@ public class BudgetController  {
     @GetMapping("/budgets")
     public ResponseEntity<?> getAllbudgets()
     {
+        log.info("----get all budgets--");
         List<BudgetDTO> budgetDTOS = budgetService.getBudgetsForUser(util.getUser());
         return ResponseEntity.ok(budgetDTOS);
     }
@@ -37,6 +38,7 @@ public class BudgetController  {
     @GetMapping("/budgets/{id}")
     public ResponseEntity<?> getBudgetsById(@PathVariable Integer id)
     {
+        log.debug("getting budget using id: {}",id);
         return ResponseEntity.ok(budgetService.getById(id));
     }
 }

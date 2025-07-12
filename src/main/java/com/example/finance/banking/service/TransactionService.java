@@ -5,10 +5,12 @@ import com.example.finance.banking.entity.Transaction;
 import com.example.finance.banking.entity.User;
 import com.example.finance.banking.mapper.Mapper;
 import com.example.finance.banking.repository.TransactionRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 public class TransactionService {
     private final TransactionRepository transactionRepository;
@@ -37,12 +39,17 @@ public class TransactionService {
         Transaction transaction = transactionRepository.findById(id)
                 .orElse(null);
 
-        // Check if transaction exists and belongs to current user
+        log.info("After fetching");
         if (transaction == null || !transaction.getUser().getId().equals(user.getId())) {
             return null; // Return null if not owned
         }
 
         return mapper.mappingTransactiontoTransactionDTO(transaction);
+    }
+    public List<Transaction> getAll()
+    {
+        return transactionRepository.findAll();
+
     }
 
 }

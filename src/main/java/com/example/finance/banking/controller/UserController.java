@@ -36,6 +36,7 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<?> registration(@RequestBody UserRequestDTO userRequestDTO) {
+        log.debug("--Registration with userId: {}",userRequestDTO.getEmail());
         if (userService.isEmailExist(userRequestDTO.getEmail())) {
             log.error("Email already exists: {}", userRequestDTO.getEmail());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email already in use");
@@ -44,11 +45,11 @@ public class UserController {
         return ResponseEntity.ok(userRequestDTO);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequestDTO request) {
-
-        return ResponseEntity.ok("Login successful");
-    }
+//    @PostMapping("/login")
+//    public ResponseEntity<?> login(@RequestBody LoginRequestDTO request) {
+//
+//        return ResponseEntity.ok("Login successful");
+//    }
 
     @GetMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
@@ -61,6 +62,7 @@ public class UserController {
 
     @GetMapping("/me")
     public ResponseEntity<?> currentUser() {
+        log.info("----Fetching user info--");
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (!(auth instanceof AnonymousAuthenticationToken)) {
             return ResponseEntity.ok(auth.getName());
