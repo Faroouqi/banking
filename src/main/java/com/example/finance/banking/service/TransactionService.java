@@ -8,6 +8,10 @@ import com.example.finance.banking.repository.TransactionRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.Year;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -50,6 +54,34 @@ public class TransactionService {
     {
         return transactionRepository.findAll();
 
+    }
+    public List<TransactionDTO> getByMonth(int month)
+    {
+        List<Transaction> transactions =transactionRepository.findByYearAndMonth(Year.now().getValue(),month);
+        ArrayList<TransactionDTO> transactionList = new ArrayList<>();
+        transactions.forEach(transaction -> {
+            transactionList.add(mapper.mappingTransactiontoTransactionDTO(transaction));
+        });
+        return transactionList;
+    }
+    public List<TransactionDTO> getByYear()
+    {
+        List<Transaction> transactions = transactionRepository.findByYear(Year.now().getValue());
+        ArrayList<TransactionDTO> transactionList = new ArrayList<>();
+        transactions.forEach(transaction -> {
+            transactionList.add(mapper.mappingTransactiontoTransactionDTO(transaction));
+        });
+        return transactionList;
+    }
+
+    public List<TransactionDTO> getByRange(LocalDate current, LocalDate fina)
+    {
+        List<Transaction> transactions = transactionRepository.findByDateBetween(current,fina);
+        ArrayList<TransactionDTO> transactionList = new ArrayList<>();
+        transactions.forEach(transaction -> {
+            transactionList.add(mapper.mappingTransactiontoTransactionDTO(transaction));
+        });
+        return transactionList;
     }
 
 }

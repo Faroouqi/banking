@@ -16,8 +16,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.Year;
 
 @RestController
 @Slf4j
@@ -73,4 +76,32 @@ public class TransactionController {
 
         return ResponseEntity.ok(transactionDTO);
     }
+
+    @GetMapping("/transactions/search")
+    public ResponseEntity<?> searchTransaction(
+            @RequestParam(value = "id", required = true) int id,
+            @RequestParam(value = "date", required = false) Integer date,
+            @RequestParam(value = "enddate", required = false) Integer enddate) {
+
+        if (id == 1) {
+            // date is expected as month number
+            if (date == null) {
+                return ResponseEntity.badRequest().body("Parameter 'date' is required for id=1");
+            }
+            return ResponseEntity.ok(transactionService.getByMonth(date));
+        } else if (id == 2) {
+            return ResponseEntity.ok(transactionService.getByYear());
+        } else {
+            // Use default months if date or enddate is null
+            int startMonth = (date != null) ? date : 1;     // default to January
+            int endMonth = (enddate != null) ? enddate : 12; // default to December
+            int currentYear = Year.now().getValue();
+
+            LocalDate startDate = YearMonth.of(currentYear, startMonth).atDay(1);
+            LocalDate endDate = YearMonth.of(currentYear, endMonth).atEndOfMonth();
+
+            return ResponseEntity.ok(transactionService.getByRange(startDate, endDate));
+        }
+    }
+
 }
