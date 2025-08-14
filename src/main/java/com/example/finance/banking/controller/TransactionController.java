@@ -82,7 +82,7 @@ public class TransactionController {
             @RequestParam(value = "id", required = true) int id,
             @RequestParam(value = "date", required = false) Integer date,
             @RequestParam(value = "enddate", required = false) Integer enddate) {
-
+            log.info("Transaction id is {}",id);
         if (id == 1) {
             // date is expected as month number
             if (date == null) {
