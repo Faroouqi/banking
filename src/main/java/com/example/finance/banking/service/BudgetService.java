@@ -20,9 +20,12 @@ public class BudgetService {
         this.mapper = mapper;
     }
 
-    public BudgetDTO getById(Integer id)
+    public List<BudgetDTO> getById(String id)
     {
-        return mapper.toDTO(budgetRepository.findById(id).orElseThrow());
+        List<Budget> budgets=budgetRepository.findByYear(id);
+        return budgets.stream()
+                .map(budget -> mapper.toDTO(budget))
+                .toList();
     }
 
     public List<BudgetDTO> getBudgetsForUser(User user) {

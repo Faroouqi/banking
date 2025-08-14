@@ -47,9 +47,9 @@ public class BudgetController  {
     }
 
     @GetMapping("/budgets/{id}")
-    public ResponseEntity<?> getBudgetsById(@PathVariable Integer id)
+    public ResponseEntity<?> getBudgetsById(@PathVariable String id)
     {
-        log.debug("getting budget using id: {}",id);
+        log.info("getting budget using id: {}",id);
         return ResponseEntity.ok((budgetService.getById(id)));
     }
 }
