@@ -3,6 +3,7 @@ package com.example.finance.banking.controller;
 import com.example.finance.banking.dto.LoginRequestDTO;
 import com.example.finance.banking.dto.UserRequestDTO;
 import com.example.finance.banking.mapper.Mapper;
+import com.example.finance.banking.service.EmailService;
 import com.example.finance.banking.service.UserService;
 import com.example.finance.banking.util.UserDetailUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,6 +20,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
+
 @Slf4j
 @RestController
 public class UserController {
@@ -26,12 +31,15 @@ public class UserController {
     private final UserService userService;
     private final Mapper mapper;
     private final UserDetailUtil util;
+    private final EmailService emailService;
 
+    private final Map<String, String> otpStore = new ConcurrentHashMap<>();
     @Autowired
-    public UserController(UserService userService, Mapper mapper, UserDetailUtil util) {
+    public UserController(UserService userService, Mapper mapper, UserDetailUtil util, EmailService emailService) {
         this.userService = userService;
         this.mapper = mapper;
         this.util = util;
+        this.emailService = emailService;
     }
 
     @PostMapping("/register")
@@ -45,12 +53,48 @@ public class UserController {
         return ResponseEntity.ok(userRequestDTO);
     }
 
-//    @PostMapping("/login")
-//    public ResponseEntity<?> login(@RequestBody LoginRequestDTO request) {
-//
-//        return ResponseEntity.ok("Login successful");
-//    }
+    @PostMapping("/send-otp")
+    public ResponseEntity<Map<String, String>> sendOtp(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
 
+        if (email == null || email.isBlank()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Email must be provided"));
+        }
+
+        String otp = getSixDigitRandomNumber();
+        otpStore.put(email, otp);
+        emailService.sendVerificationEmail(email, otp);
+
+        return ResponseEntity.ok(Map.of(
+                "email", email,
+                "message", "OTP sent successfully"
+        ));
+    }
+
+
+    @PostMapping("/verify-otp")
+    public ResponseEntity<Map<String, String>> verifyOtp(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+        String otp = request.get("otp");
+
+        if (email == null || otp == null) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Email and OTP must be provided"));
+        }
+
+        String storedOtp = otpStore.get(email);
+        if (storedOtp != null && storedOtp.equals(otp)) {
+            otpStore.remove(email); // ✅ clear OTP once verified
+            return ResponseEntity.ok(Map.of("message", "OTP verified successfully"));
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Invalid OTP"));
+        }
+    }
+
+    public static String getSixDigitRandomNumber() {
+        Random random = new Random();
+        int number = random.nextInt(900000) + 100000;  // Generates a number between 100000 and 999999
+        return String.valueOf(number);
+    }
     @GetMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
