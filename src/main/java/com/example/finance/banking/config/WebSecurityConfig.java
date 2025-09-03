@@ -26,7 +26,7 @@ public class WebSecurityConfig {
     private CustomAuthenticationSucccessHandler customAuthenticationSucccessHandler;
 
     private final String[] publicUrl = {
-            "/", "/register", "/login", "/logout", "/home","/send-otp", "/verify-otp"
+            "/", "/register", "/login", "/logout", "/home","/send-otp", "/verify-otp","/reset-password"
     };
 
     @Autowired
