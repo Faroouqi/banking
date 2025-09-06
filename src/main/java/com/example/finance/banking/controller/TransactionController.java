@@ -74,7 +74,6 @@ public class TransactionController {
                     .body("You are not allowed to access this transaction");
         }
 
-
         return ResponseEntity.ok(transactionDTO);
     }
 
