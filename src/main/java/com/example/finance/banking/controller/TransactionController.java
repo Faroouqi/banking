@@ -73,7 +73,6 @@ public class TransactionController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body("You are not allowed to access this transaction");
         }
-
         return ResponseEntity.ok(transactionDTO);
     }
 
