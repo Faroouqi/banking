@@ -8,6 +8,7 @@ import com.example.finance.banking.repository.BudgetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Year;
 import java.util.List;
 
 @Service
@@ -22,7 +23,8 @@ public class BudgetService {
 
     public List<BudgetDTO> getById(String id)
     {
-        List<Budget> budgets=budgetRepository.findByYear(id);
+        int currentYear = Year.now().getValue();
+        List<Budget> budgets=budgetRepository.findByMonthAndYear(id,Integer.toString(currentYear));
         return budgets.stream()
                 .map(budget -> mapper.toDTO(budget))
                 .toList();
