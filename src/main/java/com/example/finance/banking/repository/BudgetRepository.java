@@ -10,5 +10,5 @@ import java.util.Optional;
 public interface BudgetRepository extends JpaRepository<Budget,Integer> {
 
     List<Budget> findByUser(User user);
-    List<Budget> findByYear(String month);
+    List<Budget> findByMonthAndYear(String month, String year);
 }
