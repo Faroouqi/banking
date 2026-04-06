@@ -1,14 +1,21 @@
 package com.example.finance.banking.mapper;
 
 import com.example.finance.banking.dto.BudgetDTO;
+import com.example.finance.banking.dto.GoalDTO;
 import com.example.finance.banking.dto.TransactionDTO;
 import com.example.finance.banking.dto.UserRequestDTO;
 import com.example.finance.banking.entity.Budget;
+import com.example.finance.banking.entity.Goal;
 import com.example.finance.banking.entity.Transaction;
 import com.example.finance.banking.entity.User;
+import com.example.finance.banking.enu.GoalStatus;
 import org.hibernate.annotations.Comment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Component
 public class Mapper {
@@ -70,6 +77,31 @@ public class Mapper {
         dto.setMonth(budgetDTO.getMonth());
         dto.setYear(budgetDTO.getYear());
         return dto;
+    }
+
+    public Goal toGoal(GoalDTO goalDTO,User user)
+    {
+        Goal goal = new Goal();
+        goal.setTargetAmount(goalDTO.getTargetAmount());
+        goal.setUser(user);
+        goal.setGoalName(goalDTO.getGoalName());
+        goal.setTargetDate(goalDTO.getTargetDate());
+        goal.setCreatedAt(LocalDateTime.now());
+        goal.setSavedAmount(BigDecimal.valueOf(0));
+        goal.setStatus(GoalStatus.ACTIVE);
+        return goal;
+    }
+
+    public GoalDTO mappingGoaltoGoalDTO(Goal goal)
+    {
+        GoalDTO dTO = new GoalDTO();
+        dTO.setCreatedAt(LocalDateTime.now());
+        dTO.setGoalName(goal.getGoalName());
+        dTO.setSavedAmount(goal.getSavedAmount());
+        dTO.setTargetAmount(goal.getTargetAmount());
+        dTO.setTargetDate(goal.getTargetDate());
+        dTO.setStatus(goal.getStatus().getValue());
+        return dTO;
     }
 
 
