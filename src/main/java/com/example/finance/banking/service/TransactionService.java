@@ -14,7 +14,6 @@ import java.time.Year;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -104,4 +103,10 @@ public class TransactionService {
 
     }
 
+    public void deleteTransaction(List<Integer> ids) {
+        for (Integer id : ids) {
+            transactionRepository.deleteById(Math.toIntExact(id));
+        }
+
+    }
 }

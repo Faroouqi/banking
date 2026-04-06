@@ -2,19 +2,14 @@ package com.example.finance.banking.controller;
 
 import com.example.finance.banking.dto.TransactionDTO;
 import com.example.finance.banking.entity.Transaction;
-import com.example.finance.banking.entity.User;
 import com.example.finance.banking.mapper.Mapper;
 import com.example.finance.banking.service.TransactionService;
 import com.example.finance.banking.service.UserService;
 import com.example.finance.banking.util.UserDetailUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.ILoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -113,12 +108,11 @@ public class TransactionController {
 
         return ResponseEntity.ok(transactionDTO);
     }
-
-//
-//    @DeleteMapping("")
-//    public ResponseEntity<?> deleteTransaction()
-//    {
-//
-//    }
+    @DeleteMapping("/transactions/delete")
+    public ResponseEntity<Void> deleteTransactions(@RequestBody List<Integer> ids) {
+        transactionService.deleteTransaction(ids);
+        log.info("Deleted Successfully");
+        return ResponseEntity.noContent().build();
+    }
 
 }
