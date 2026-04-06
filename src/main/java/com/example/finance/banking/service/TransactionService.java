@@ -8,11 +8,13 @@ import com.example.finance.banking.repository.TransactionRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Year;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -82,6 +84,24 @@ public class TransactionService {
             transactionList.add(mapper.mappingTransactiontoTransactionDTO(transaction));
         });
         return transactionList;
+    }
+    public TransactionDTO updateTransaction(User user,String field,String newValue,Integer id)
+    {
+        Transaction transaction = transactionRepository.findById(id)
+                .orElse(null);
+
+        if(field.equals("amount"))
+        {
+            BigDecimal bd = new BigDecimal(newValue);
+            transaction.setAmount(bd);
+        }else if(field.equals("category"))
+        {
+            transaction.setCategory(newValue);
+        }
+        transaction.setDate(LocalDate.now());
+        Transaction saved = transactionRepository.save(transaction);
+       return mapper.mappingTransactiontoTransactionDTO(saved);
+
     }
 
 }

@@ -8,6 +8,7 @@ import com.example.finance.banking.service.TransactionService;
 import com.example.finance.banking.service.UserService;
 import com.example.finance.banking.util.UserDetailUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.ILoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -103,5 +104,21 @@ public class TransactionController {
             return ResponseEntity.ok(transactionService.getByRange(startDate, endDate));
         }
     }
+    @PutMapping("/transactions/{id}")
+    public ResponseEntity<?> updateTransaction(@PathVariable Integer id,
+            @RequestParam String field,
+            @RequestParam String value) {
+             log.info("Updating Transaction id is {}",id);
+          TransactionDTO transactionDTO  = transactionService.updateTransaction(util.getUser(),field,value,id);
+
+        return ResponseEntity.ok(transactionDTO);
+    }
+
+//
+//    @DeleteMapping("")
+//    public ResponseEntity<?> deleteTransaction()
+//    {
+//
+//    }
 
 }
