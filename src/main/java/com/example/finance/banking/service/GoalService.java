@@ -50,4 +50,16 @@ public class GoalService {
         return mapper.mappingGoaltoGoalDTO(goal);
     }
 
+    public List<GoalDTO> getAllGoal()
+    {
+        List<Goal> goalList = goalRepository.findAll();
+        List<GoalDTO> goalDTOs = goalList.stream()
+                .map(mapper::mappingGoaltoGoalDTO)
+                .toList();
+        return goalDTOs;
+    }
+
+    public void deleteGoal(Integer id) {
+        goalRepository.deleteById(Math.toIntExact(id));
+    }
 }

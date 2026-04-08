@@ -8,10 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 //@RequestMapping("/goals")
@@ -40,6 +39,25 @@ public class GoalController {
         return ResponseEntity.ok(goalService.addGoal(request,util.getUser()));
 
 
+    }
+    @GetMapping("/goals/get")
+    public ResponseEntity<?> getGoal()
+    {
+        if(util.getUser()==null)
+        {
+            if (util.getUser() == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not Authorized in");
+            }
+        }
+        log.info("Getting Goal");
+        return ResponseEntity.ok(goalService.getAllGoal());
+    }
+
+    @DeleteMapping("/goals/delete/{id}")
+    public ResponseEntity<Void> deleteTransactions(@PathVariable Integer id) {
+        goalService.deleteGoal(id);
+        log.info("Deleted Successfully");
+        return ResponseEntity.noContent().build();
     }
 
 }

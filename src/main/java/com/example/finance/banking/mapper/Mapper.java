@@ -95,6 +95,8 @@ public class Mapper {
     public GoalDTO mappingGoaltoGoalDTO(Goal goal)
     {
         GoalDTO dTO = new GoalDTO();
+        dTO.setId(Long.valueOf(goal.getId()));
+        dTO.setUserId(Long.valueOf(goal.getUser().getId()));
         dTO.setCreatedAt(LocalDateTime.now());
         dTO.setGoalName(goal.getGoalName());
         dTO.setSavedAmount(goal.getSavedAmount());
