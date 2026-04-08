@@ -1,8 +1,11 @@
 package com.example.finance.banking.controller;
 
+import com.example.finance.banking.dto.GoalDTO;
 import com.example.finance.banking.dto.TransactionDTO;
+import com.example.finance.banking.entity.Goal;
 import com.example.finance.banking.entity.Transaction;
 import com.example.finance.banking.mapper.Mapper;
+import com.example.finance.banking.service.GoalService;
 import com.example.finance.banking.service.TransactionService;
 import com.example.finance.banking.service.UserService;
 import com.example.finance.banking.util.UserDetailUtil;
@@ -24,13 +27,15 @@ public class TransactionController {
 
         private final TransactionService transactionService;
         private final UserService userService;
+        private final GoalService goalService;
         private Mapper mapper;
         private final UserDetailUtil util;
 
     @Autowired
-    public TransactionController(TransactionService transactionService, UserService userService, UserDetailUtil util,Mapper mapper) {
+    public TransactionController(TransactionService transactionService, UserService userService, GoalService goalService, UserDetailUtil util, Mapper mapper) {
         this.transactionService = transactionService;
         this.userService = userService;
+        this.goalService = goalService;
         this.util = util;
         this.mapper = mapper;
     }
@@ -56,7 +61,13 @@ public class TransactionController {
         log.info("--Inside CreateTransaction----");
         if (util.getUser() != null) {
             log.info("user id: {}",util.getUser().getEmail());
-
+            if(request.getType().equals("GOAL"))
+            {
+                log.info("Inside");
+                GoalDTO goal = goalService.getGoal(util.getUser(),request.getCategory(),request.getAmount());
+//                return ResponseEntity.ok(goal);
+            }
+            log.info("Outside");
             return ResponseEntity.ok(transactionService.createTransaction(request,util.getUser()));
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not Authorized in");

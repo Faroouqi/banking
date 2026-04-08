@@ -1,8 +1,8 @@
 package com.example.finance.banking.enu;
 
 public enum GoalStatus {
-    ACTIVE("active"),
-    ACHIEVED("achieved");
+    ACTIVE("ACTIVE"),
+    ACHIEVED("ACHIEVED");
 
     private final String value;
 

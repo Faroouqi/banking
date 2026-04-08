@@ -35,7 +35,7 @@ public class Transaction {
     private LocalDateTime createdAt = LocalDateTime.now();
 
     public enum TransactionType {
-        INCOME, EXPENSE
+        INCOME, EXPENSE,GOAL
     }
 
     public Integer getId() {
