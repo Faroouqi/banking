@@ -13,7 +13,11 @@ import java.time.LocalDate;
 import java.time.Year;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static org.hibernate.internal.util.collections.ArrayHelper.forEach;
 
 @Slf4j
 @Service
@@ -55,6 +59,23 @@ public class TransactionService {
     {
         return transactionRepository.findAll();
 
+    }
+    public Map<Integer, BigDecimal> getSpendings()
+    {
+//        Map<Integer,Integer> mp = new HashMap<>();
+        List<Transaction> trs = getAll();
+        Map<Integer, BigDecimal> mp = new HashMap<>();
+        int currentYear = LocalDate.now().getYear();
+
+        trs.forEach(transaction -> {
+            if (transaction.getDate().getYear() == currentYear) {
+                int month = transaction.getDate().getMonthValue();
+                mp.put(month,
+                        mp.getOrDefault(month, BigDecimal.ZERO)
+                                .add(transaction.getAmount()));
+            }
+        });
+        return mp;
     }
     public List<TransactionDTO> getByMonth(int month)
     {

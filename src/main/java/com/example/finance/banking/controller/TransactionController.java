@@ -15,11 +15,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 import java.time.Year;
+import java.util.Map;
 
 @RestController
 @Slf4j
@@ -52,6 +54,19 @@ public class TransactionController {
                 transactionList.add(mapper.mappingTransactiontoTransactionDTO(transaction));
             });
             return ResponseEntity.ok(transactionList);
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not Authorized in");
+    }
+
+    @GetMapping("/transaction/spendings")
+    public ResponseEntity<?> getAllSpendings()
+    {
+        log.info("---Getting all transaction---");
+        if(util.getUser()!=null)
+        {
+            Map<Integer, BigDecimal> mp = transactionService.getSpendings();
+            log.info("Spendings " + mp);
+            return ResponseEntity.ok(mp);
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not Authorized in");
     }
