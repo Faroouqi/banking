@@ -83,10 +83,31 @@ public class TransactionController {
 //                return ResponseEntity.ok(goal);
             }
             log.info("Outside");
-            return ResponseEntity.ok(transactionService.createTransaction(request,util.getUser()));
+            Transaction tr = transactionService.updateCategoryTransaction(request.getCategory(),util.getUser());
+            if(tr!=null)
+            {
+                log.info("Tr!=null");
+                TransactionDTO transactionDTO = transactionService.updateAmount(util.getUser(), request.getAmount(),tr.getId());
+                return ResponseEntity.ok(transactionDTO);
+            }else
+            {
+                log.info("tr==null");
+                return ResponseEntity.ok(transactionService.createTransaction(request,util.getUser()));
+            }
+
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not Authorized in");
     }
+
+//    @GetMapping("/transaction/category")
+//    public ResponseEntity<?> getByCategory(@RequestBody Map<String,String > category)
+//    {
+//        log.info("--Fetching Transaction info using id: {}",category);
+//        boolean tr = transactionService.updateCategoryTransaction(category.get("category"), util.getUser());
+//
+//        return ResponseEntity.ok(tr);
+//    }
+
     @GetMapping("/transactions/{id}")
     public ResponseEntity<?> getTransactionById(@PathVariable Integer id) {
         log.info("--Fetching Transaction info using id: {}",id);

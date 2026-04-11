@@ -21,5 +21,8 @@ public interface TransactionRepository extends JpaRepository<Transaction,Integer
 
     @Query("SELECT t FROM Transaction t WHERE FUNCTION('YEAR', t.date) = :year")
     List<Transaction> findByYear(@Param("year") int year);
+
+    @Query("SELECT t FROM Transaction t WHERE t.category = :category AND t.user.id = :userId AND FUNCTION('MONTH', t.date) = :month" )
+    Transaction findByCategoryAndUserId(@Param("category") String category, @Param("userId") Integer userId,@Param("month") int month);
 }
 

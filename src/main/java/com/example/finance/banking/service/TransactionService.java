@@ -12,12 +12,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Year;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static org.hibernate.internal.util.collections.ArrayHelper.forEach;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -124,10 +119,35 @@ public class TransactionService {
 
     }
 
+    public TransactionDTO updateAmount(User user,BigDecimal amount,Integer id)
+    {
+        Transaction transaction = transactionRepository.findById(id)
+                .orElse(null);
+        BigDecimal amo = transaction.getAmount();
+        log.info("amount Before adding: " + amo);
+
+        amo = amo.add(amount);
+        log.info("transaction: " + amo);
+        transaction.setAmount(amo);
+
+        log.info("amount after adding: " + transaction.getAmount());
+        Transaction saved = transactionRepository.save(transaction);
+        return mapper.mappingTransactiontoTransactionDTO(saved);
+    }
+
     public void deleteTransaction(List<Integer> ids) {
         for (Integer id : ids) {
             transactionRepository.deleteById(Math.toIntExact(id));
         }
 
+    }
+
+    public Transaction updateCategoryTransaction(String category, User user)
+    {
+        log.info("Category: "+category + " User: " + user.getId());
+        int month = LocalDate.now().getMonthValue();
+        Transaction t = transactionRepository.findByCategoryAndUserId(category,user.getId(),month);
+        log.info("Updated Transaction t: "+ t);
+        return t;
     }
 }
