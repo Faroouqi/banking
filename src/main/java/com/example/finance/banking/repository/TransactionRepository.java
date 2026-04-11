@@ -24,5 +24,32 @@ public interface TransactionRepository extends JpaRepository<Transaction,Integer
 
     @Query("SELECT t FROM Transaction t WHERE t.category = :category AND t.user.id = :userId AND FUNCTION('MONTH', t.date) = :month" )
     Transaction findByCategoryAndUserId(@Param("category") String category, @Param("userId") Integer userId,@Param("month") int month);
+
+    @Query("SELECT SUM(t.amount) FROM Transaction t " +
+            "WHERE t.user.id = :userId " +
+            "AND t.type = :type " +
+            "AND t.date BETWEEN :startDate AND :endDate")
+    Double getTotalByTypeAndDateRange(
+            @Param("userId") Integer userId,
+            @Param("type") Transaction.TransactionType type,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate
+    );
+
+    @Query("SELECT t.category FROM Transaction t " +
+            "WHERE t.user.id = :userId " +
+            "AND t.type = :type " +
+            "AND t.date BETWEEN :startDate AND :endDate " +
+            "AND t.amount = (" +
+            "   SELECT MAX(t1.amount) FROM Transaction t1 " +
+            "   WHERE t1.user.id = :userId " +
+            "   AND t1.type = :type " +
+            "   AND t1.date BETWEEN :startDate AND :endDate" +
+            ")")
+    String getTotalByTypeAndDateRangeAndCategory(@Param("userId") Integer userId,
+                                                 @Param("type") Transaction.TransactionType type,
+                                                 @Param("startDate") LocalDate startCurrentMonth,
+                                                 @Param("endDate") LocalDate now);
 }
+
 
