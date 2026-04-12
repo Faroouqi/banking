@@ -1,5 +1,7 @@
 package com.example.finance.banking.service;
 
+import com.example.finance.banking.dto.MonthlySummaryDTO;
+import com.example.finance.banking.dto.SavingsTrendDTO;
 import com.example.finance.banking.dto.TransactionDTO;
 import com.example.finance.banking.entity.Transaction;
 import com.example.finance.banking.entity.User;
@@ -10,8 +12,10 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.Year;
 
+import java.time.format.TextStyle;
 import java.util.*;
 
 @Slf4j
@@ -149,5 +153,36 @@ public class TransactionService {
         Transaction t = transactionRepository.findByCategoryAndUserId(category,user.getId(),month);
         log.info("Updated Transaction t: "+ t);
         return t;
+    }
+    public SavingsTrendDTO getSavingsTrend(Integer userId) {
+
+        LocalDate startOfCurrentMonth = LocalDate.now().withDayOfMonth(1);
+
+        List<Object[]> results = transactionRepository.getMonthlySummaryTillLastMonth(
+                userId,
+                startOfCurrentMonth
+        );
+
+        List<MonthlySummaryDTO> monthlySummary = new ArrayList<>();
+        double totalSavings = 0;
+
+        for (Object[] row : results) {
+            int monthNumber = ((Number) row[0]).intValue();
+            double income = ((Number) row[1]).doubleValue();
+            double expense = ((Number) row[2]).doubleValue();
+
+            double savings = income - expense;
+            double v = savings < 0 ? 0 : savings;
+            totalSavings += v;
+
+            String monthName = Month.of(monthNumber)
+                    .getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
+
+            monthlySummary.add(
+                    new MonthlySummaryDTO(monthName, income, expense, v)
+            );
+        }
+
+        return new SavingsTrendDTO(totalSavings, monthlySummary);
     }
 }

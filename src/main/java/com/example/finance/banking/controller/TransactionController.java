@@ -4,6 +4,7 @@ import com.example.finance.banking.dto.GoalDTO;
 import com.example.finance.banking.dto.TransactionDTO;
 import com.example.finance.banking.entity.Goal;
 import com.example.finance.banking.entity.Transaction;
+import com.example.finance.banking.entity.User;
 import com.example.finance.banking.mapper.Mapper;
 import com.example.finance.banking.service.GoalService;
 import com.example.finance.banking.service.TransactionService;
@@ -84,7 +85,7 @@ public class TransactionController {
             }
             log.info("Outside");
             Transaction tr = transactionService.updateCategoryTransaction(request.getCategory(),util.getUser());
-            if(tr!=null)
+            if(tr!=null && request.getDate().getMonthValue()==LocalDate.now().getMonthValue())
             {
                 log.info("Tr!=null");
                 TransactionDTO transactionDTO = transactionService.updateAmount(util.getUser(), request.getAmount(),tr.getId());
@@ -145,6 +146,19 @@ public class TransactionController {
 
             return ResponseEntity.ok(transactionService.getByRange(startDate, endDate));
         }
+    }
+    @GetMapping("/transactions/savings")
+    public ResponseEntity<?> getSavings()
+    {
+        User user =util.getUser();
+        if(user!=null)
+        {
+           return ResponseEntity.ok(transactionService.getSavingsTrend(user.getId()));
+        }
+
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not Authorized in");
+
+
     }
     @PutMapping("/transactions/{id}")
     public ResponseEntity<?> updateTransaction(@PathVariable Integer id,

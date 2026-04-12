@@ -3,17 +3,16 @@ package com.example.finance.banking.controller;
 import com.example.finance.banking.dto.InsightDTO;
 import com.example.finance.banking.service.InsightService;
 import com.example.finance.banking.util.UserDetailUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/insights")
+@Slf4j
 public class InsightController {
 
     @Autowired
@@ -21,9 +20,10 @@ public class InsightController {
     @Autowired
     UserDetailUtil util;
 
-    @GetMapping("/")
-    public ResponseEntity<List<InsightDTO>> getInsights() {
+    @GetMapping("/{month}")
+    public ResponseEntity<List<InsightDTO>> getInsights(@PathVariable Integer month) {
         Integer userId = util.getUser().getId();
-        return ResponseEntity.ok(insightService.generateInsights(userId));
+        log.info("Month is "+ month);
+        return ResponseEntity.ok(insightService.generateInsights(userId,month));
     }
 }

@@ -50,6 +50,21 @@ public interface TransactionRepository extends JpaRepository<Transaction,Integer
                                                  @Param("type") Transaction.TransactionType type,
                                                  @Param("startDate") LocalDate startCurrentMonth,
                                                  @Param("endDate") LocalDate now);
+
+    @Query(value = """
+    SELECT MONTH(t.date),
+        COALESCE(SUM(CASE WHEN t.type = 'INCOME' THEN t.amount ELSE 0 END), 0),
+        COALESCE(SUM(CASE WHEN t.type = 'EXPENSE' THEN t.amount ELSE 0 END), 0)
+    FROM transactions t
+    WHERE t.user_id = :userId
+      AND t.date < :startOfCurrentMonth
+    GROUP BY MONTH(t.date)
+    ORDER BY MONTH(t.date)
+    """, nativeQuery = true)
+    List<Object[]> getMonthlySummaryTillLastMonth(
+            @Param("userId") Integer userId,
+            @Param("startOfCurrentMonth") LocalDate startOfCurrentMonth
+    );
 }
 
 
