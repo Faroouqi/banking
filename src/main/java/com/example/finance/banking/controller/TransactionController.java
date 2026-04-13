@@ -81,20 +81,8 @@ public class TransactionController {
             {
                 log.info("Inside");
                 GoalDTO goal = goalService.getGoal(util.getUser(),request.getCategory(),request.getAmount());
-//                return ResponseEntity.ok(goal);
             }
-            log.info("Outside");
-            Transaction tr = transactionService.updateCategoryTransaction(request.getCategory(),util.getUser());
-            if(tr!=null && request.getDate().getMonthValue()==LocalDate.now().getMonthValue())
-            {
-                log.info("Tr!=null");
-                TransactionDTO transactionDTO = transactionService.updateAmount(util.getUser(), request.getAmount(),tr.getId());
-                return ResponseEntity.ok(transactionDTO);
-            }else
-            {
-                log.info("tr==null");
-                return ResponseEntity.ok(transactionService.createTransaction(request,util.getUser()));
-            }
+            return ResponseEntity.ok(transactionService.createTransaction(request,util.getUser()));
 
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not Authorized in");
