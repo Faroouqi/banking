@@ -43,6 +43,7 @@ public class BudgetController  {
     {
         log.info("----get all budgets--");
         List<BudgetDTO> budgetDTOS = budgetService.getBudgetsForUser(util.getUser());
+        log.info("Total Budgets",budgetDTOS);
         return ResponseEntity.ok(budgetDTOS);
     }
 

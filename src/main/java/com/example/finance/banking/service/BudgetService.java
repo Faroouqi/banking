@@ -34,7 +34,7 @@ public class BudgetService {
     public List<BudgetDTO> getBudgetsForUser(User user) {
         int year = LocalDate.now().getYear();
 
-        List<Budget> budgets = budgetRepository.findByUserAndYear(user,String.valueOf(year)); // or findByUserId(user.getId())
+        List<Budget> budgets = budgetRepository.findByUserAndYear(user.getId(),String.valueOf(year)); // or findByUserId(user.getId())
         return budgets.stream()
                 .map(budget -> mapper.toDTO(budget))
                 .toList();
