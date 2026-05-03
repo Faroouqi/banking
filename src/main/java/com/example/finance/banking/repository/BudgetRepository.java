@@ -16,6 +16,11 @@ import java.util.Optional;
 public interface BudgetRepository extends JpaRepository<Budget,Integer> {
 
     List<Budget> findByUser(User user);
+    @Query("SELECT COALESCE(SUM(t.budgetAmount), 0) FROM Budget t " +
+            "WHERE t.user.id = :userId " +
+            "AND t.year = :year")
+    List<Budget> findByUserAndYear(User user,String year);
+
     List<Budget> findByMonthAndYear(String month, String year);
 
     @Query("SELECT COALESCE(SUM(t.budgetAmount), 0) FROM Budget t " +
