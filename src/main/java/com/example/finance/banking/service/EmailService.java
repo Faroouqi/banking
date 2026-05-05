@@ -133,8 +133,8 @@ public class EmailService {
                 "<p style='margin:0 0 4px;color:#9ca3af;font-size:12px;'>" +
                 "&#169; 2025 Finance Manager &#183; All rights reserved</p>" +
                 "<p style='margin:0;color:#9ca3af;font-size:12px;'>" +
-                "Questions? <a href='mailto:support@financemanager.com' " +
-                "style='color:#4f46e5;text-decoration:none;'>support@financemanager.com</a></p>" +
+                "Questions? <a href='mailto:support.financemanager@gmail.com' " +
+                "style='color:#4f46e5;text-decoration:none;'>support.financemanager@gmail.com</a></p>" +
                 "</td>" +
                 "</tr>" +
 

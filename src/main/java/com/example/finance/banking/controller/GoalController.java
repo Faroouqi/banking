@@ -50,7 +50,7 @@ public class GoalController {
             }
         }
         log.info("Getting Goal");
-        return ResponseEntity.ok(goalService.getAllGoal());
+        return ResponseEntity.ok(goalService.getAllGoal(util.getUser().getId()));
     }
 
     @DeleteMapping("/goals/delete/{id}")

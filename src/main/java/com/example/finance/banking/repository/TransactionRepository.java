@@ -12,15 +12,15 @@ import java.util.Optional;
 public interface TransactionRepository extends JpaRepository<Transaction,Integer> {
     List<Transaction> findByUserId(Integer id);
 
-    @Query("SELECT t FROM Transaction t WHERE FUNCTION('YEAR', t.date) = :year AND FUNCTION('MONTH', t.date) = :month")
-    List<Transaction> findByYearAndMonth(@Param("year") int year, @Param("month") int month);
+    @Query("SELECT t FROM Transaction t WHERE t.user.id = :userId AND FUNCTION('YEAR', t.date) = :year AND FUNCTION('MONTH', t.date) = :month")
+    List<Transaction> findByYearAndMonth(@Param("year") int year, @Param("month") int month,@Param("userId") Integer userId);
 
 
     List<Transaction> findByDateBetween(LocalDate startDate, LocalDate endDate);
 
 
-    @Query("SELECT t FROM Transaction t WHERE FUNCTION('YEAR', t.date) = :year")
-    List<Transaction> findByYear(@Param("year") int year);
+    @Query("SELECT t FROM Transaction t WHERE t.user.id = :userId AND FUNCTION('YEAR', t.date) = :year")
+    List<Transaction> findByYear(@Param("year") int year,@Param("userId") Integer userId);
 
     @Query("SELECT t FROM Transaction t WHERE t.category = :category AND t.user.id = :userId AND FUNCTION('MONTH', t.date) = :month" )
     Transaction findByCategoryAndUserId(@Param("category") String category, @Param("userId") Integer userId,@Param("month") int month);

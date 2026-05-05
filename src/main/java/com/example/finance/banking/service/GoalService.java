@@ -50,9 +50,9 @@ public class GoalService {
         return mapper.mappingGoaltoGoalDTO(goal);
     }
 
-    public List<GoalDTO> getAllGoal()
+    public List<GoalDTO> getAllGoal(Integer userId)
     {
-        List<Goal> goalList = goalRepository.findAll();
+        List<Goal> goalList = goalRepository.findByUser_Id(userId);
         List<GoalDTO> goalDTOs = goalList.stream()
                 .map(mapper::mappingGoaltoGoalDTO)
                 .toList();

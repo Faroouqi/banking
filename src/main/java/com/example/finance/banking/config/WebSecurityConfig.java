@@ -57,9 +57,10 @@ public class WebSecurityConfig {
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessHandler((req, res, auth) -> res.setStatus(HttpServletResponse.SC_OK))
+                        .logoutSuccessHandler((req, res, auth) ->
+                                res.setStatus(HttpServletResponse.SC_OK))
                 )
-                .httpBasic(Customizer.withDefaults())
+                // .httpBasic(Customizer.withDefaults())  ← 🗑️ remove this line
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint((req, res, authException) ->
                                 res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized"))

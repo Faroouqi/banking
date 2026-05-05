@@ -49,7 +49,7 @@ public class TransactionController {
         log.info("---Getting all transaction---");
         if(util.getUser()!=null)
         {
-            List<Transaction> transactions = transactionService.getAll();
+            List<Transaction> transactions = transactionService.getAll(util.getUser().getId());
             ArrayList<TransactionDTO> transactionList = new ArrayList<>();
             transactions.forEach(transaction -> {
                 transactionList.add(mapper.mappingTransactiontoTransactionDTO(transaction));
@@ -65,7 +65,7 @@ public class TransactionController {
         log.info("---Getting all transaction---");
         if(util.getUser()!=null)
         {
-            Map<Integer, BigDecimal> mp = transactionService.getSpendings();
+            Map<Integer, BigDecimal> mp = transactionService.getSpendings(util.getUser().getId());
             log.info("Spendings " + mp);
             return ResponseEntity.ok(mp);
         }
@@ -115,14 +115,15 @@ public class TransactionController {
             @RequestParam(value = "date", required = false) Integer date,
             @RequestParam(value = "enddate", required = false) Integer enddate) {
             log.info("Transaction id is {}",id);
-        if (id == 1) {
+            User user =util.getUser();
+            if (id == 1) {
             // date is expected as month number
             if (date == null) {
                 return ResponseEntity.badRequest().body("Parameter 'date' is required for id=1");
             }
-            return ResponseEntity.ok(transactionService.getByMonth(date));
+            return ResponseEntity.ok(transactionService.getByMonth(date,user.getId()));
         } else if (id == 2) {
-            return ResponseEntity.ok(transactionService.getByYear());
+            return ResponseEntity.ok(transactionService.getByYear(user.getId()));
         } else {
             // Use default months if date or enddate is null
             int startMonth = (date != null) ? date : 1;     // default to January

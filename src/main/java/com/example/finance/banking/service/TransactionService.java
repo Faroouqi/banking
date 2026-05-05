@@ -54,15 +54,15 @@ public class TransactionService {
 
         return mapper.mappingTransactiontoTransactionDTO(transaction);
     }
-    public List<Transaction> getAll()
+    public List<Transaction> getAll(Integer userId)
     {
-        return transactionRepository.findAll();
+        return transactionRepository.findByUserId(userId);
 
     }
-    public Map<Integer, BigDecimal> getSpendings()
+    public Map<Integer, BigDecimal> getSpendings(Integer userId)
     {
 //        Map<Integer,Integer> mp = new HashMap<>();
-        List<Transaction> trs = getAll();
+        List<Transaction> trs = getAll(userId);
         Map<Integer, BigDecimal> mp = new HashMap<>();
         int currentYear = LocalDate.now().getYear();
 
@@ -76,18 +76,18 @@ public class TransactionService {
         });
         return mp;
     }
-    public List<TransactionDTO> getByMonth(int month)
+    public List<TransactionDTO> getByMonth(int month,Integer userId)
     {
-        List<Transaction> transactions =transactionRepository.findByYearAndMonth(Year.now().getValue(),month);
+        List<Transaction> transactions =transactionRepository.findByYearAndMonth(Year.now().getValue(),month,userId);
         ArrayList<TransactionDTO> transactionList = new ArrayList<>();
         transactions.forEach(transaction -> {
             transactionList.add(mapper.mappingTransactiontoTransactionDTO(transaction));
         });
         return transactionList;
     }
-    public List<TransactionDTO> getByYear()
+    public List<TransactionDTO> getByYear(Integer userId)
     {
-        List<Transaction> transactions = transactionRepository.findByYear(Year.now().getValue());
+        List<Transaction> transactions = transactionRepository.findByYear(Year.now().getValue(),userId);
         ArrayList<TransactionDTO> transactionList = new ArrayList<>();
         transactions.forEach(transaction -> {
             transactionList.add(mapper.mappingTransactiontoTransactionDTO(transaction));
