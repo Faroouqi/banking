@@ -133,7 +133,7 @@ public class TransactionController {
             LocalDate startDate = YearMonth.of(currentYear, startMonth).atDay(1);
             LocalDate endDate = YearMonth.of(currentYear, endMonth).atEndOfMonth();
 
-            return ResponseEntity.ok(transactionService.getByRange(startDate, endDate));
+            return ResponseEntity.ok(transactionService.getByRange(startDate, endDate,user.getId()));
         }
     }
     @GetMapping("/transactions/savings")

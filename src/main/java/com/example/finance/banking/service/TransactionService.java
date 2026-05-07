@@ -95,9 +95,9 @@ public class TransactionService {
         return transactionList;
     }
 
-    public List<TransactionDTO> getByRange(LocalDate current, LocalDate fina)
+    public List<TransactionDTO> getByRange(LocalDate current, LocalDate fina,Integer userId)
     {
-        List<Transaction> transactions = transactionRepository.findByDateBetween(current,fina);
+        List<Transaction> transactions = transactionRepository.findByDateBetween(userId,current,fina);
         ArrayList<TransactionDTO> transactionList = new ArrayList<>();
         transactions.forEach(transaction -> {
             transactionList.add(mapper.mappingTransactiontoTransactionDTO(transaction));

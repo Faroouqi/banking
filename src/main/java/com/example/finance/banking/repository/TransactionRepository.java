@@ -16,7 +16,12 @@ public interface TransactionRepository extends JpaRepository<Transaction,Integer
     List<Transaction> findByYearAndMonth(@Param("year") int year, @Param("month") int month,@Param("userId") Integer userId);
 
 
-    List<Transaction> findByDateBetween(LocalDate startDate, LocalDate endDate);
+    @Query("SELECT t FROM Transaction t " +
+            "WHERE t.user.id = :userId " +
+            "AND t.date BETWEEN :startDate AND :endDate")
+    List<Transaction> findByDateBetween(@Param("userId") Integer userId,
+                                        @Param("startDate") LocalDate startDate,
+                                        @Param("endDate") LocalDate endDate);
 
 
     @Query("SELECT t FROM Transaction t WHERE t.user.id = :userId AND FUNCTION('YEAR', t.date) = :year")
