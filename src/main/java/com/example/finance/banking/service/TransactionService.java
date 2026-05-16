@@ -67,7 +67,7 @@ public class TransactionService {
         int currentYear = LocalDate.now().getYear();
 
         trs.forEach(transaction -> {
-            if (transaction.getDate().getYear() == currentYear) {
+            if (transaction.getDate().getYear() == currentYear && transaction.getType().equals(Transaction.TransactionType.EXPENSE)) {
                 int month = transaction.getDate().getMonthValue();
                 mp.put(month,
                         mp.getOrDefault(month, BigDecimal.ZERO)
