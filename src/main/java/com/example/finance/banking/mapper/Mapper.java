@@ -1,13 +1,7 @@
 package com.example.finance.banking.mapper;
 
-import com.example.finance.banking.dto.BudgetDTO;
-import com.example.finance.banking.dto.GoalDTO;
-import com.example.finance.banking.dto.TransactionDTO;
-import com.example.finance.banking.dto.UserRequestDTO;
-import com.example.finance.banking.entity.Budget;
-import com.example.finance.banking.entity.Goal;
-import com.example.finance.banking.entity.Transaction;
-import com.example.finance.banking.entity.User;
+import com.example.finance.banking.dto.*;
+import com.example.finance.banking.entity.*;
 import com.example.finance.banking.enu.GoalStatus;
 import org.hibernate.annotations.Comment;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -106,6 +100,31 @@ public class Mapper {
         return dTO;
     }
 
+    public Loan mappingLoanDTOtoLoan(LoanDTO dto,User user)
+    {
+        Loan loan = new Loan();
+        loan.setPersonName(dto.getPersonName());
+        loan.setUser(user);
+        loan.setAmount(dto.getAmount());
+        loan.setNote(dto.getNote());
+        loan.setStatus(Loan.LoanStatus.PENDING);
+        loan.setDate(dto.getDate());
+        return loan;
+    }
+
+    public LoanDTO mappingLoantoLoanDTO(Loan loan)
+    {
+        LoanDTO loanDTO = new LoanDTO();
+        loanDTO.setStatus(loan.getStatus().name());
+        loanDTO.setUserId(loan.getUser().getId());
+        loanDTO.setAmount(loan.getAmount());
+        loanDTO.setPaidAmount(loan.getPaidAmount());
+        loanDTO.setNote(loan.getNote());
+        loanDTO.setDate(loan.getDate());
+        loanDTO.setPersonName(loan.getPersonName());
+        loanDTO.setId(loan.getId());
+        return loanDTO;
+    }
 
 
 }
