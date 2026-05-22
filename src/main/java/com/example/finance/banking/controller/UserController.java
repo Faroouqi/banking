@@ -6,6 +6,7 @@ import com.example.finance.banking.dto.UserRequestDTO;
 import com.example.finance.banking.entity.User;
 import com.example.finance.banking.mapper.Mapper;
 import com.example.finance.banking.service.EmailService;
+import com.example.finance.banking.service.TransactionService;
 import com.example.finance.banking.service.UserService;
 import com.example.finance.banking.util.UserDetailUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,6 +25,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
@@ -37,15 +40,17 @@ public class UserController {
     private final UserDetailUtil util;
     private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
+    private final TransactionService transactionService;
 
     private final Map<String, String> otpStore = new ConcurrentHashMap<>();
     @Autowired
-    public UserController(UserService userService, Mapper mapper, UserDetailUtil util, EmailService emailService, PasswordEncoder passwordEncoder) {
+    public UserController(UserService userService, Mapper mapper, UserDetailUtil util, EmailService emailService, PasswordEncoder passwordEncoder, TransactionService transactionService) {
         this.userService = userService;
         this.mapper = mapper;
         this.util = util;
         this.emailService = emailService;
         this.passwordEncoder = passwordEncoder;
+        this.transactionService = transactionService;
     }
 
     @PostMapping("/register")
@@ -121,7 +126,11 @@ public class UserController {
             String username = userDetails.getUsername();
             User user = userService.getUser(username);
             log.info(user.getUsername());
-            return ResponseEntity.ok(user.getUsername());
+            List<String> info = new ArrayList<>();
+            info.add(user.getUsername());
+            Double balance = transactionService.getSavingsTrend(user.getId()).getTotalSavingsTillLastMonth();
+            info.add(balance.toString());
+            return ResponseEntity.ok(info);
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not logged in");
     }

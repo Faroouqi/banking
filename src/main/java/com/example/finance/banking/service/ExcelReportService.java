@@ -593,9 +593,6 @@ public class ExcelReportService {
 //        chart.plot(data);
     }
 
-    // =========================================================
-    // STYLES
-    // =========================================================
 
     /** Full-width dark navy banner at the top of each sheet */
     private CellStyle createBannerStyle(XSSFWorkbook wb) {
