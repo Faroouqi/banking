@@ -48,35 +48,37 @@ public class TransactionController {
     public ResponseEntity<?> getAllTransaction()
     {
         log.info("---Getting all transaction---");
-        if(util.getUser()!=null)
-        {
+        if(!util.isValidUser()){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not Authorized in");
+        }
+
             List<Transaction> transactions = transactionService.getAll(util.getUser().getId());
             ArrayList<TransactionDTO> transactionList = new ArrayList<>();
             transactions.forEach(transaction -> {
                 transactionList.add(mapper.mappingTransactiontoTransactionDTO(transaction));
             });
             return ResponseEntity.ok(transactionList);
-        }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not Authorized in");
+
     }
 
     @GetMapping("/transaction/spendings")
     public ResponseEntity<?> getAllSpendings()
     {
         log.info("---Getting all transaction---");
-        if(util.getUser()!=null)
-        {
-            Map<Integer, BigDecimal> mp = transactionService.getSpendings(util.getUser().getId());
+        if(!util.isValidUser()){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not Authorized in");
+        }
+        Map<Integer, BigDecimal> mp = transactionService.getSpendings(util.getUser().getId());
             log.info("Spendings " + mp);
             return ResponseEntity.ok(mp);
-        }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not Authorized in");
     }
 
     @PostMapping("/transaction")
     public ResponseEntity<?> createTransaction(@RequestBody TransactionDTO request) {
         log.info("--Inside CreateTransaction----");
-        if (util.getUser() != null) {
+        if(!util.isValidUser()){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not Authorized in");
+        }
             log.info("user id: {}",util.getUser().getEmail());
             if(request.getType().equals("GOAL"))
             {
@@ -85,8 +87,7 @@ public class TransactionController {
             }
             return ResponseEntity.ok(transactionService.createTransaction(request,util.getUser()));
 
-        }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not Authorized in");
+
     }
 
 //    @GetMapping("/transaction/category")
@@ -100,6 +101,9 @@ public class TransactionController {
 
     @GetMapping("/transactions/{id}")
     public ResponseEntity<?> getTransactionById(@PathVariable Integer id) {
+        if(!util.isValidUser()){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not Authorized in");
+        }
         log.info("--Fetching Transaction info using id: {}",id);
         TransactionDTO transactionDTO = transactionService.getTransactionById(id, util.getUser());
         if (transactionDTO == null) {
@@ -140,27 +144,28 @@ public class TransactionController {
     @GetMapping("/transactions/savings")
     public ResponseEntity<?> getSavings()
     {
-        User user =util.getUser();
-        if(user!=null)
-        {
-           return ResponseEntity.ok(transactionService.getSavingsTrend(user.getId()));
-        }
-
+        if(!util.isValidUser()){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not Authorized in");
+        }
+        User user =util.getUser();
 
-
+           return ResponseEntity.ok(transactionService.getSavingsTrend(user.getId()));
     }
     @PutMapping("/transactions/{id}")
     public ResponseEntity<?> updateTransaction(@PathVariable Integer id,
             @RequestParam String field,
             @RequestParam String value) {
              log.info("Updating Transaction id is {}",id);
+        if(!util.isValidUser()){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not Authorized in");
+        }
           TransactionDTO transactionDTO  = transactionService.updateTransaction(util.getUser(),field,value,id);
 
         return ResponseEntity.ok(transactionDTO);
     }
     @DeleteMapping("/transactions/delete")
     public ResponseEntity<Void> deleteTransactions(@RequestBody List<Integer> ids) {
+
         transactionService.deleteTransaction(ids);
         log.info("Deleted Successfully");
         return ResponseEntity.noContent().build();

@@ -33,5 +33,10 @@ public class UserDetailUtil {
         }
         return null;
     }
+    public boolean isValidUser()
+    {
+        if(getUser()==null) return false;
+        return true;
+    }
 
 }

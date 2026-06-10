@@ -36,8 +36,7 @@ public class LoansController {
     @PostMapping("add")
     public ResponseEntity<?> addLoan(@RequestBody LoanDTO loanDTO)
     {
-        if(util.getUser()==null)
-        {
+        if(!util.isValidUser()){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not Authorized in");
         }
         User user = util.getUser();
@@ -48,8 +47,9 @@ public class LoansController {
     @GetMapping("get")
     public ResponseEntity<?> getLoan()
     {
-        if(util.getUser()==null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not Authorized in");
-
+        if(!util.isValidUser()){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not Authorized in");
+        }
         User user = util.getUser();
         List<LoanDTO> loanDTOS = loanService.getLoan(user.getId());
         log.info("after getting " + loanDTOS);
@@ -59,8 +59,9 @@ public class LoansController {
     @PutMapping("update/{id}")
     public ResponseEntity<?> updateLoan(@PathVariable Integer id, @RequestParam BigDecimal amount)
     {
-        if(util.getUser()==null)  return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not Authorized in");
-
+        if(!util.isValidUser()){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not Authorized in");
+        }
         Integer userId = util.getUser().getId();
         LoanDTO loanDTO = loanService.updateLoan(id,userId,amount);
         return ResponseEntity.ok(loanDTO);

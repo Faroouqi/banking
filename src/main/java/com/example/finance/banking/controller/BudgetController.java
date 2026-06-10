@@ -31,7 +31,7 @@ public class BudgetController  {
     public ResponseEntity<?> addBudget(@RequestBody BudgetDTO dto)
     {
         log.info("---Adding budget----");
-        if (util.getUser() != null) {
+        if (util.isValidUser()) {
             log.info("user id: {}",util.getUser().getEmail());
 
             return ResponseEntity.ok(budgetService.addBudget(dto, util.getUser()));
@@ -42,6 +42,9 @@ public class BudgetController  {
     public ResponseEntity<?> getAllbudgets()
     {
         log.info("----get all budgets--");
+        if(!util.isValidUser()){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not Authorized in");
+        }
         List<BudgetDTO> budgetDTOS = budgetService.getBudgetsForUser(util.getUser());
         log.info("Total Budgets",budgetDTOS);
         return ResponseEntity.ok(budgetDTOS);
@@ -50,6 +53,9 @@ public class BudgetController  {
     @GetMapping("/budgets/{id}")
     public ResponseEntity<?> getBudgetsById(@PathVariable String id)
     {
+        if(!util.isValidUser()){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not Authorized in");
+        }
         log.info("getting budget using id: {}",id);
         return ResponseEntity.ok((budgetService.getById(id)));
     }

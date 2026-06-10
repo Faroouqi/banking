@@ -31,7 +31,7 @@ public class GoalController {
     @PostMapping("/goals/add")
     public ResponseEntity<?> addGoal(@RequestBody GoalDTO request)
     {
-        if (util.getUser() == null) {
+        if(!util.isValidUser()){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not Authorized in");
         }
 
@@ -43,11 +43,8 @@ public class GoalController {
     @GetMapping("/goals/get")
     public ResponseEntity<?> getGoal()
     {
-        if(util.getUser()==null)
-        {
-            if (util.getUser() == null) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not Authorized in");
-            }
+        if(!util.isValidUser()){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not Authorized in");
         }
         log.info("Getting Goal");
         return ResponseEntity.ok(goalService.getAllGoal(util.getUser().getId()));
@@ -55,6 +52,9 @@ public class GoalController {
 
     @DeleteMapping("/goals/delete/{id}")
     public ResponseEntity<Void> deleteTransactions(@PathVariable Integer id) {
+        if(!util.isValidUser()){
+            return (ResponseEntity<Void>) ResponseEntity.status(HttpStatus.UNAUTHORIZED);
+        }
         goalService.deleteGoal(id);
         log.info("Deleted Successfully");
         return ResponseEntity.noContent().build();

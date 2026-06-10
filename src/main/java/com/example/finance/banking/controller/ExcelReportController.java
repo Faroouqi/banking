@@ -29,7 +29,7 @@ public class ExcelReportController {
     @GetMapping("/dummy-report")
     public ResponseEntity<byte[]> downloadDummyReport() {
         try {
-            if (util.getUser() == null) {
+            if (!util.isValidUser()) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not Authorized in".getBytes());
             }
             byte[] excelFile = excelReportService.generateDummyFinanceReport(util.getUser().getId());
